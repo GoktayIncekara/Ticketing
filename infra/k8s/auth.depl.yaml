@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth #how to find all the pods that is going to create
+  template: #how to create each pod that is the deployment is going to create
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+        - name: auth
+          image: goktayincekara/auth
+---
+apiVersion: v1 #default type of the service is the cluster IP service. Thats why we are not providing any type
+kind: Service
+metadata:
+  name: auth-srv
+spec:
+  selector:
+    app: auth #We want to find all the pods with the name of app: auth (in metadata -> labels)
+  ports:
+    - name: auth
+      protocol: TCP
+      port: 3000
+      targetPort: 3000 #Bcs we are listening 3000 in the auth implementation
