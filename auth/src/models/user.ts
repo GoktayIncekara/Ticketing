@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+import { Password } from "../services/password";
+
 //An interface that describes the properties that are required to create a new User
 interface UserAttrs {
   email: string;
@@ -15,6 +17,16 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+});
+
+userSchema.pre("save", async function (done) {
+  //We didnt use arrow function because if we would, this keyword would be for the whole .ts file context. But now it is for the user based context.
+  if (this.isModified("password")) {
+    const hashed = await Password.toHash(this.get("password"));
+    this.set("password", hashed);
+  }
+
+  done();
 });
 
 //An interface that describes the properties that a User Model has
