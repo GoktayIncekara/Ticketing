@@ -15,6 +15,12 @@ spec:
       containers:
         - name: auth
           image: goktayincekara/auth
+          env:
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
 ---
 apiVersion: v1 #default type of the service is the cluster IP service. Thats why we are not providing any type
 kind: Service
