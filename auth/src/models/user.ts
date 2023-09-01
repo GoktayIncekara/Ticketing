@@ -8,16 +8,28 @@ interface UserAttrs {
   password: string;
 }
 
-const userSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
+const userSchema = new mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
   },
-  password: {
-    type: String,
-    required: true,
-  },
-});
+  {
+    toJSON: {
+      transform(doc, ret) {
+        delete ret.password;
+        delete ret.__v;
+        ret.id = ret._id;
+        delete ret._id;
+      },
+    },
+  }
+);
 
 userSchema.pre("save", async function (done) {
   //We didnt use arrow function because if we would, this keyword would be for the whole .ts file context. But now it is for the user based context.
