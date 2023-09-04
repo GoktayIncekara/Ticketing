@@ -8,7 +8,6 @@ import { User } from "../models/user";
 import { BadRequestError } from "../errors/bad-request-error";
 
 const router = express.Router();
-
 router.post(
   "/api/users/signup",
   [
