@@ -14,7 +14,9 @@ const app = express();
 app.set("trust proxy", true); //To make sure that express is aware that is behind the proxy of ingress-ngx and make sure it trust the traffic
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieSession({ signed: false, secure: true }));
+app.use(
+  cookieSession({ signed: false, secure: process.env.NODE_ENV !== "test" })
+); //secure:true means that cookies are only going to be shared when someone is making a request to our server over an https connection
 
 app.use(currentUserRouter);
 app.use(signinRouter);
