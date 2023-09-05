@@ -34,3 +34,5 @@ spec:
       protocol: TCP
       port: 3000
       targetPort: 3000 #Bcs we are listening 3000 in the auth implementation
+#With auth-srv name, any other pod or anything else inside of our cluster can access this service and therefore the pod that it governs
+#access to by trying to go to http://auth-srv  (http://auth-srv/api/users/currentuser)
