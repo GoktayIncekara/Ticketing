@@ -1,10 +1,11 @@
 import "bootstrap/dist/css/bootstrap.css"; //We created this component to be able to add global css or to add a component to be visible in each page
 import buildClient from "../api/build-client";
+import Header from "../components/header";
 
 const AppComponent = ({ Component, pageProps, currentUser }) => {
   return (
     <div>
-      <h1>Header! {currentUser.email}</h1>
+      <Header currentUser={currentUser} />
       <Component {...pageProps} />
     </div>
   );
