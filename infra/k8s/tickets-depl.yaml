@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-depl
+  name: tickets-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: auth #how to find all the pods that is going to create
+      app: tickets #how to find all the pods that is going to create
   template: #how to create each pod that is the deployment is going to create
     metadata:
       labels:
-        app: auth
+        app: tickets
     spec:
       containers:
-        - name: auth
-          image: goktayincekara/auth
+        - name: tickets
+          image: goktayincekara/tickets
           env:
             - name: MONGO_URI
-              value: "mongodb://auth-mongo-srv:27017/auth"
+              value: "mongodb://tickets-mongo-srv:27017/tickets" #Last tickets is the databse name inside the db that we are trying to create
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:
@@ -27,12 +27,12 @@ spec:
 apiVersion: v1 #default type of the service is the cluster IP service. Thats why we are not providing any type
 kind: Service
 metadata:
-  name: auth-srv
+  name: tickets-srv
 spec:
   selector:
-    app: auth #We want to find all the pods with the name of app: auth (in metadata -> labels)
+    app: tickets #We want to find all the pods with the name of app: auth (in metadata -> labels)
   ports:
-    - name: auth
+    - name: tickets
       protocol: TCP
       port: 3000
       targetPort: 3000 #Bcs we are listening 3000 in the auth implementation
