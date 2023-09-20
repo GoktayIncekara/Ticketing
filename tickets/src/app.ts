@@ -6,6 +6,8 @@ import cookieSession from "cookie-session";
 import { errorHandler, NotFoundError, currentUser } from "@ticketsgi/common";
 import { createTicketRouter } from "./routes/new";
 import { showTicketRouter } from "./routes/show";
+import { indexTicketRouter } from "./routes";
+import { updateTicketRouter } from "./routes/update";
 
 const app = express();
 app.set("trust proxy", true); //To make sure that express is aware that is behind the proxy of ingress-ngx and make sure it trust the traffic
@@ -17,6 +19,8 @@ app.use(
 app.use(currentUser);
 app.use(createTicketRouter);
 app.use(showTicketRouter);
+app.use(indexTicketRouter);
+app.use(updateTicketRouter);
 
 app.all("*", async (req, res) => {
   //Bcs of express-async-errors we would be able to get the async keyword to work in express
