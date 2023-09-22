@@ -11,6 +11,13 @@ const start = async () => {
   }
   try {
     await natsWrapper.connect("ticketing", "flkfjd", "http://nats-srv:4222");
+    natsWrapper.client.on("close", () => {
+      console.log("NATS connection closed!");
+      process.exit();
+    });
+    process.on("SIGINT", () => natsWrapper.client.close());
+    process.on("SIGTERM", () => natsWrapper.client.close());
+
     await mongoose.connect(process.env.MONGO_URI); //the name of the service to connect to mongodb. And it will create a db automatically called auth (since we wrote it like that here)
     console.log("connected");
   } catch (err) {
