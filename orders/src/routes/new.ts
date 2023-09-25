@@ -1,7 +1,9 @@
 import express, { Request, Response } from "express";
-import { requireAuth, validateRequest } from "@ticketsgi/common";
+import { NotFoundError, requireAuth, validateRequest } from "@ticketsgi/common";
 import { body } from "express-validator";
 import mongoose from "mongoose";
+import { Ticket } from "../models/ticket";
+import { Order } from "../models/order";
 
 const router = express.Router();
 
@@ -19,6 +21,14 @@ router.post(
   ],
   validateRequest,
   async (req: Request, res: Response) => {
+    const { ticketId } = req.body;
+
+    const ticket = await Ticket.findById(ticketId);
+
+    if (!ticket) {
+      throw new NotFoundError();
+    }
+
     res.send({});
   }
 );
