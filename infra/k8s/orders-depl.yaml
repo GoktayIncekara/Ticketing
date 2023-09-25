@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orders #how to find all the pods that is going to create
+  template: #how to create each pod that is the deployment is going to create
+    metadata:
+      labels:
+        app: orders
+    spec:
+      containers:
+        - name: orders
+          image: goktayincekara/orders
+          env:
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name #To get the pod name as a client id in the environment variable
+            - name: NATS_URL
+              value: "http://nats-srv:4222"
+            - name: NATS_CLUSTER_ID
+              value: ticketing
+            - name: MONGO_URI
+              value: "mongodb://orders-mongo-srv:27017/orders" #Last tickets is the databse name inside the db that we are trying to create
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+---
+apiVersion: v1 #default type of the service is the cluster IP service. Thats why we are not providing any type
+kind: Service
+metadata:
+  name: orders-srv
+spec:
+  selector:
+    app: orders #We want to find all the pods with the name of app: auth (in metadata -> labels)
+  ports:
+    - name: orders
+      protocol: TCP
+      port: 3000
+      targetPort: 3000 #Bcs we are listening 3000 in the auth implementation
+#With auth-srv name, any other pod or anything else inside of our cluster can access this service and therefore the pod that it governs
+#access to by trying to go to http://auth-srv  (http://auth-srv/api/users/currentuser)
