@@ -1,5 +1,6 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 import { OrderStatus } from "@ticketsgi/common";
+
 import { TicketDoc } from "./ticket";
 
 export { OrderStatus };
